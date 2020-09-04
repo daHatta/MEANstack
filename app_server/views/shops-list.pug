@@ -1,23 +1,23 @@
 extends layout
+include _includes/sharedHTMLfunctions
 
 block content
   .row.banner
     .col-12
-      h1 Liste an Unverpackt-Läden
+      h1= pageHeader.title
   .row 
     .col-12.col-md-8
-      .card
-        .card-block
-          h4
-            a(href='/shopslist/shop') Laden Nummer 1
-            small &nbsp;
-              i.fas.fa-star
-              i.fas.fa-star
-              i.fas.fa-star
-            span.badge.badge-pill.badge-default.float-right 100m
-          p.address Hauptstraße 1, 12334 Potsdam
-          .facilities
-            span.badge.badge-warning Food
+      each shop in shops
+        .card
+          .card-block
+            h4
+              a(href='/shopslist/shop')= shop.name
+              small &nbsp;
+                +outputRating(shop.rating)
+              span.badge.badge-pill.badge-default.float-right= shop.distance
+            p.address= shop.address
+            .facilities
+              span.badge.badge-warning= shop.facilities
     .col-12.col-md-4
       p.lead  Hier sind allgemeine Infos in der Slidebar
 

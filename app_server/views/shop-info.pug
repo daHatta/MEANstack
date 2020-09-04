@@ -1,51 +1,55 @@
 extends layout
+include _includes/sharedHTMLfunctions
 
 block content
     .row.banner
         .col-12
-            h1 Laden Nummer 1
+            h1 Bewertungen für #{shop.name}
     .row
         .col-12.col-lg-9
             .row
                 .col-12.col-md-6
                     p.rating
-                        i.fas.fa-star
-                        i.fas.fa-star
-                        i.fas.fa-star
-                    p Hauptstraße 1, 12334 Potsdam
+                        +outputRating(shop.rating)
+                    p= shop.address
                     .card.card-primary
                         .card-block
                             h2.card-title Öffnungszeiten
-                            p.card-text Montag - Freitag : 10:00 bis 18:00 Uhr
-                            p.card-text Samstag : 10:00 bis 16:00 Uhr
-                            p.card-text Sonntag : Geschlossen
+                            each hours in shop.openingHours
+                                p.card-text 
+                                    | #{hours.days}: 
+                                    if hours.closed 
+                                        | closed
+                                    else
+                                        | #{hours.opening} - #{hours.closing}
                     .card.card-primary
                         .card-block
                             h2.card-title Anlagen
-                            span.badge.badge-warning
-                                i.fa.fa-check | &nbsp;Hot drinks | &nbsp;
-                            span.badge.badge-warning
-                                i.fa.fa-check | &nbsp;Food | &nbsp;
+                            each fitting in shop.facilities
+                                span.badge.badge-warning
+                                    i.fa.fa-check
+                                    | &nbsp;#{fitting}
+                                | &nbsp;
                 .col-12.col-md-6.location-map
                     .card.card-primary
                         .card-block
                             h2.card-title Karte
-                            img.img-fluid.rounded(src='https://picsum.photos/450/300')
+                            img.img-fluid.rounded(src=`https://maps.googleapis.com/maps/api/staticmap?center=${shop.coords.lat},${shop.coords.lng}&zoom=17&size=400x350&sensor=false&marker=${shop.coords.lat},${shop.coords.lng}&scale=2&key=YOUR-KEY`)
             .row
                 .col-12
                     .card.card-primary.review-card
                         .card-block
                             a.btn.btn-primary.float-right(href='/shopslist/shop/review/new') Bewertung hinzufügen
                             h2.card-title Kundenbewertung
+                            each review in shop.reviews
                                 .row.review
                                     .col-12.no-gutters.review-header
                                         span.rating
-                                            i.fas.fa-star
-                                            i.fas.fa-star
-                                        span.review Autor Person 1
-                                        small.review Datum 3 September 2020
+                                            +outputRating(review.rating)
+                                        span.review Autor: #{review.author}
+                                        small.review Datum: #{review.timestamp}
                                     .col-12
-                                        p Ein toller Laden
-        .col-12.col-lg-9
+                                        p= review.reviewText
+            .col-12.col-lg-9
             p.lead Wieder Text zur weitern Information
 
